@@ -25,6 +25,8 @@ public class PlayerMovement : MonoBehaviour
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
+        
+
         if(isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
@@ -47,7 +49,7 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 move = move = transform.right * x + transform.forward * z;
 
-        controller.Move(move * speed * Time.deltaTime);
+        controller.Move(move * (Input.GetKey(KeyCode.LeftShift)? speed * 2 : speed) * Time.deltaTime);
 
         if(Input.GetButtonDown("Jump") && isGrounded)
         {
