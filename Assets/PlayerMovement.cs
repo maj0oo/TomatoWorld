@@ -30,10 +30,22 @@ public class PlayerMovement : MonoBehaviour
             velocity.y = -2f;
         }
 
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
+        float x = 0f;
+        float z = 0f;
 
-        Vector3 move = transform.right * x + transform.forward * z;
+        if (isGrounded)
+        {
+            x = Input.GetAxis("Horizontal");
+            z = Input.GetAxis("Vertical");
+        }
+        else
+        {
+            x = Input.GetAxis("Horizontal") / 2;
+            z = Input.GetAxis("Vertical") / 2;
+            Debug.Log($"X: {x} Z: {z}");
+        }
+
+        Vector3 move = move = transform.right * x + transform.forward * z;
 
         controller.Move(move * speed * Time.deltaTime);
 
