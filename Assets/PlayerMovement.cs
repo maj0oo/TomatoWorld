@@ -1,11 +1,14 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Assets;
+using Assets.Models;
+using Assets.Models.Pots;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
     public CharacterController controller;
+    public Camera cam;
+    public Text text;
     public float speed = 12f;
     public float gravity = -30f;
     public float jumpHeight = 3f;
@@ -14,18 +17,23 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask groundMask;
     Vector3 velocity;
     bool isGrounded;
+    private LookManager lookManager;
     // Start is called before the first frame update
     void Start()
     {
-       
+        lookManager = new LookManager(text, cam);
+        var pots = GameObject.FindGameObjectsWithTag(Consts.Tags.Pot);
+        for(int i = 0;i< pots.Length; i++)
+        {
+            Pot pot = new Pot(pots[i]);
+            PotsManager.pots.Add(pot);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-
-        
 
         if(isGrounded && velocity.y < 0)
         {
@@ -44,7 +52,6 @@ public class PlayerMovement : MonoBehaviour
         {
             x = Input.GetAxis("Horizontal") / 2;
             z = Input.GetAxis("Vertical") / 2;
-            Debug.Log($"X: {x} Z: {z}");
         }
 
         Vector3 move = move = transform.right * x + transform.forward * z;
@@ -58,5 +65,6 @@ public class PlayerMovement : MonoBehaviour
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+        lookManager.CheckLook();
     }
 }
