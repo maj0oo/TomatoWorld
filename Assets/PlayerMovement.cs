@@ -1,5 +1,6 @@
 using Assets;
 using Assets.Models;
+using Assets.Models.Inventory;
 using Assets.Models.Pots;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     public CharacterController controller;
     public Camera cam;
     public Text text;
+    public Text info;
     public float speed = 12f;
     public float gravity = -30f;
     public float jumpHeight = 3f;
@@ -18,9 +20,13 @@ public class PlayerMovement : MonoBehaviour
     Vector3 velocity;
     bool isGrounded;
     private LookManager lookManager;
+    private InventoryManager inventoryManager;
     // Start is called before the first frame update
     void Start()
     {
+        inventoryManager = new InventoryManager();
+        info.gameObject.SetActive(false);
+        InventoryManager.info = info;
         lookManager = new LookManager(text, cam);
         var pots = GameObject.FindGameObjectsWithTag(Consts.Tags.Pot);
         for(int i = 0;i< pots.Length; i++)
@@ -66,5 +72,6 @@ public class PlayerMovement : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
         lookManager.CheckLook();
+        inventoryManager.CheckForTextUpdates();
     }
 }

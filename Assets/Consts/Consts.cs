@@ -15,6 +15,12 @@ namespace Assets
         public class Translations
         {
             public const string plantTomato = "[E] Zasadź pomidora";
+            public const string getTomato = "[E] Zbierz pomidora";
+            public const string malinowy = "Malinowy";
+            public const string koktajlowy = "Koktajlowy";
+            public const string daktylowy = "Daktylowy";
+            public const string podluzny = "Podłużny";
+            public const string choseTomatoToSeed = "Wybierz pomidora do zasadzenia!";
         }
     }
 }

@@ -12,8 +12,10 @@ namespace Assets.Models.Tomato
     {
         public event elapsed timeElapsed;
         DateTime start = DateTime.Now;
+        DateTime current;
         DateTime end;
-        private System.Threading.Timer timer; 
+        private System.Threading.Timer timer;
+        public int growPercentage = 0;
         public  Timer(TimeSpan timeSpan)
         {
             end = start.Add(timeSpan);
@@ -21,16 +23,23 @@ namespace Assets.Models.Tomato
         }
         public string GetTime()
         {
-            return end.Subtract(start).ToString(@"hh\:mm\:ss");
+            return end.Subtract(current).ToString(@"hh\:mm\:ss");
         }
         private void tick(object state)
         {
-            start = DateTime.Now;
-            if(end.Subtract(start) <= TimeSpan.Zero)
+            current = DateTime.Now;
+            if(end.Subtract(current) <= TimeSpan.Zero)
             {
                 timeElapsed.Invoke();
                 timer.Dispose();
             }
+            growPercentage = CalculatePercentage();
+        }
+        private int CalculatePercentage()
+        {
+            TimeSpan fullTime = end.Subtract(start);
+            TimeSpan currentTime = end.Subtract(current);
+            return 100 - Convert.ToInt32(currentTime.TotalSeconds * 100 / fullTime.TotalSeconds);
         }
     }
 }

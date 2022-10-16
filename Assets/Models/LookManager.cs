@@ -26,20 +26,9 @@ namespace Assets.Models
             {
                 activeObject = pot;
                 Pot obj = PotsManager.pots.Where(p => p.GetObjectId() == activeObject.GetInstanceID()).FirstOrDefault();
-                if (obj.tomatoIsPlanted)
-                {
-                    text.text = obj.tomato.name + "\n " + obj.tomato.GetTime();
-                    text.gameObject.SetActive(true);
-                    return;
-                }
-                text.text = Consts.Translations.plantTomato;
+                text.text = obj.GetInfo();
                 text.gameObject.SetActive(true);
-                if (Input.GetKey(KeyCode.E))
-                {
-                    
-                    obj.PlantTomato();
-                    Debug.Log(activeObject.GetInstanceID());
-                }
+
                 return;
             }
             text.gameObject.SetActive(false);
