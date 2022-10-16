@@ -19,15 +19,14 @@ namespace Assets.Models.Pots
         }
         public void PlantTomato()
         {
-            if(InventoryManager.ChosedTomato == null)
+            var seed = InventoryManager.GetSeed(InventoryManager.ChosedTomato);
+            if(seed == null)
             {
-                InventoryManager.info.text = Consts.Translations.choseTomatoToSeed;
-                InventoryManager.info.gameObject.SetActive(true);
-                InventoryManager.TextTimeout();
+                InventoryManager.DisplayInfo(Consts.Translations.notEnaugthSeeds);
                 return;
             }
+            InventoryManager.RemoveSeed(seed);
             tomato = new Tomato.Tomato(InventoryManager.ChosedTomato);
-            Tomato.TomatoManager.tomatoes.Add(tomato);
         }
         public void CollectTomato()
         {
@@ -47,6 +46,10 @@ namespace Assets.Models.Pots
                         CollectTomato();
                     }
                     return Consts.Translations.getTomato;
+                }
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    InventoryManager.DisplayInfo(Consts.Translations.potIsBusy);
                 }
                 return $"{tomato.name} \n {tomato.GetTime()} \n {tomato.GetPercentage()}";
             }

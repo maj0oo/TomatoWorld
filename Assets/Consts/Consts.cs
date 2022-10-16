@@ -21,6 +21,12 @@ namespace Assets
             public const string daktylowy = "Daktylowy";
             public const string podluzny = "Podłużny";
             public const string choseTomatoToSeed = "Wybierz pomidora do zasadzenia!";
+            public const string potIsBusy = "Doniczka jest zajęta!";
+            public const string seedMalinowy = "nasiono pomidora malinowego";
+            public const string seedKoktajlowy = "nasiono pomidora koktajlowego";
+            public const string seedDaktylowy = "nasiono pomidora daktylowego";
+            public const string seedPodluzny = "nasiono pomidora daktylowego";
+            public const string notEnaugthSeeds = "Nie posiadasz nasion!";
         }
     }
 }

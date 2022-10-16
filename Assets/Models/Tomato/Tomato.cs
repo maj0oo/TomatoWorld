@@ -5,10 +5,6 @@ using UnityEngine;
 
 namespace Assets.Models.Tomato
 {
-    public class TomatoManager
-    {
-        public static List<Tomato> tomatoes = new List<Tomato>();
-    }
     public class Tomato : IDisposable
     {
         public string name;
@@ -17,8 +13,8 @@ namespace Assets.Models.Tomato
         private Timer timer;
         public int growTime => GetGrowTime(type);
         public bool collected = false;
-        public TomatoType? type;
-        public Tomato(TomatoType? type)
+        public TomatoType type;
+        public Tomato(TomatoType type)
         {
             this.type = type;
             name = GetTomatoName(type);
@@ -38,7 +34,7 @@ namespace Assets.Models.Tomato
             isReady = true;
             Debug.Log($"Pomidor urusl");
         }
-        private string GetTomatoName(TomatoType? type)
+        private string GetTomatoName(TomatoType type)
         {
             switch (type)
             {
@@ -64,7 +60,7 @@ namespace Assets.Models.Tomato
                     }
             }
         }
-        private int GetGrowTime(TomatoType? type)
+        private int GetGrowTime(TomatoType type)
         {
             switch (type)
             {
