@@ -1,3 +1,4 @@
+using Assets.Models.Inventory;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,9 +32,10 @@ namespace Assets.Models.Tomato
         }
         private void Timer_timeElapsed()
         {
+            Debug.Log("Pomidor urusl");
             isReady = true;
-            Debug.Log($"Pomidor urusl");
         }
+
         private string GetTomatoName(TomatoType type)
         {
             switch (type)

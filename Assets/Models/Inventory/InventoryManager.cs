@@ -1,6 +1,7 @@
 ﻿using Assets.Models.Tomato;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,11 +17,16 @@ namespace Assets.Models.Inventory
         private readonly static List<TextMessage> messages = new List<TextMessage>();
 
         public static TomatoType ChosedTomato = TomatoType.malinowy;
+        private static ConcurrentDictionary<TomatoType, Text> tomatoesTexts = new ConcurrentDictionary<TomatoType, Text>();
 
         //INVENTORY LISTS 
         private readonly static List<Tomato.Tomato> tomatoes = new List<Tomato.Tomato>();
         private readonly static List<Seed> seeds = new List<Seed>();
 
+        public InventoryManager()
+        {
+            ChangeTomatoHighlight(ChosedTomato);
+        }
         public static void AddTomato(Tomato.Tomato tomato)
         {
             tomatoes.Add(tomato);
@@ -86,6 +92,73 @@ namespace Assets.Models.Inventory
                 info.text = messageText;
             }
         }
+        public void SwitchTomatoType(scrollType scroll)
+        {
+            if(scroll == scrollType.down)
+            {
+                if ((int)ChosedTomato >= Enum.GetNames(typeof(TomatoType)).Length - 1)
+                {
+                    ChosedTomato = 0;
+                }
+                else
+                {
+                    ChosedTomato = ChosedTomato + 1;
+                }
+            }
+            if (scroll == scrollType.up)
+            {
+                if ((int)ChosedTomato <= 0)
+                {
+                    ChosedTomato = (TomatoType)Enum.GetNames(typeof(TomatoType)).Length - 1;
+                }
+                else
+                {
+                    ChosedTomato = ChosedTomato - 1;
+                }
+            }
+            ChangeTomatoHighlight(ChosedTomato);
+        }
+        public static bool SetTomatoText(TomatoType type, Text textObj)
+        {
+            return tomatoesTexts.TryAdd(type, textObj);
+        }
+        private void ChangeTomatoHighlight(TomatoType tomato)
+        {
+            switch (tomato)
+            {
+                case TomatoType.malinowy:
+                    {
+                        tomatoesTexts[TomatoType.malinowy].color = Color.green;
+                        break;
+                    }
+                case TomatoType.koktajlowy:
+                    {
+                        tomatoesTexts[TomatoType.koktajlowy].color = Color.green;
+                        break;
+                    }
+                case TomatoType.daktylowy:
+                    {
+                        tomatoesTexts[TomatoType.daktylowy].color = Color.green;
+                        break;
+                    }
+                case TomatoType.podluzny:
+                    {
+                        tomatoesTexts[TomatoType.podluzny].color = Color.green;
+                        break;
+                    }
+            }
+            SetRestOfTextsWhite(tomato);
+        }
+        private void SetRestOfTextsWhite(TomatoType tomato)
+        {
+            foreach(var x in tomatoesTexts)
+            {
+                if(x.Key != tomato)
+                {
+                    x.Value.color = Color.white;
+                }
+            }
+        }
     }
     public class TextMessage
     {
@@ -98,5 +171,10 @@ namespace Assets.Models.Inventory
         {
             this.text = text;
         }
+    }
+    public enum scrollType
+    {
+        up = 0,
+        down = 1
     }
 }

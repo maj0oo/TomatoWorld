@@ -26,6 +26,10 @@ namespace Assets.Models
             {
                 activeObject = pot;
                 Pot obj = PotsManager.pots.Where(p => p.GetObjectId() == activeObject.GetInstanceID()).FirstOrDefault();
+                if(obj == null)
+                {
+                    return;
+                }
                 text.text = obj.GetInfo();
                 text.gameObject.SetActive(true);
 

@@ -10,6 +10,7 @@ namespace Assets.Models.Tomato
     public delegate void elapsed();
     class Timer
     {
+        public bool _disposed = false;
         public event elapsed timeElapsed;
         DateTime start = DateTime.Now;
         DateTime current;

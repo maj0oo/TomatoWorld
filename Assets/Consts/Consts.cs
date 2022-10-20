@@ -27,6 +27,7 @@ namespace Assets
             public const string seedDaktylowy = "nasiono pomidora daktylowego";
             public const string seedPodluzny = "nasiono pomidora daktylowego";
             public const string notEnaugthSeeds = "Nie posiadasz nasion!";
+            public const string pomidorUrusl = "Pomidor ##name Urusł";
         }
     }
 }

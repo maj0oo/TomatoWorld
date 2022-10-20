@@ -28,12 +28,7 @@ public class PlayerMovement : MonoBehaviour
         info.gameObject.SetActive(false);
         InventoryManager.info = info;
         lookManager = new LookManager(text, cam);
-        var pots = GameObject.FindGameObjectsWithTag(Consts.Tags.Pot);
-        for(int i = 0;i< pots.Length; i++)
-        {
-            Pot pot = new Pot(pots[i]);
-            PotsManager.pots.Add(pot);
-        }
+        
     }
 
     // Update is called once per frame
@@ -73,5 +68,13 @@ public class PlayerMovement : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
         lookManager.CheckLook();
         inventoryManager.UpdateTextInfo();
+        if(Input.GetAxis("Mouse ScrollWheel") > 0f)
+        {
+            inventoryManager.SwitchTomatoType(scrollType.up);
+        }
+        if (Input.GetAxis("Mouse ScrollWheel") < 0f)
+        {
+            inventoryManager.SwitchTomatoType(scrollType.down);
+        }
     }
 }
