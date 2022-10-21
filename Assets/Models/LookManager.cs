@@ -1,4 +1,5 @@
-﻿using Assets.Models.Pots;
+﻿using Assets.Characters;
+using Assets.Models.Pots;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,33 +22,47 @@ namespace Assets.Models
         }
         public void CheckLook()
         {
-            var pot = PlayerLookingAtPot();
-            if (pot != null)
+            var obj = PlayerLookingAtObj();
+            if (obj != null && obj.tag == Consts.Tags.Pot)
             {
-                activeObject = pot;
-                Pot obj = PotsManager.pots.Where(p => p.GetObjectId() == activeObject.GetInstanceID()).FirstOrDefault();
-                if(obj == null)
+                activeObject = obj;
+                Pot pot = PotsManager.pots.Where(p => p.GetObjectId() == activeObject.GetInstanceID()).FirstOrDefault();
+                if(pot == null)
                 {
                     return;
                 }
-                text.text = obj.GetInfo();
+                text.text = pot.GetInfo();
                 text.gameObject.SetActive(true);
 
                 return;
             }
+            if(obj != null && obj.tag == Consts.Tags.Dealer)
+            {
+                activeObject = obj;
+                Character character = CharactersManager.characters.Where(p => p.GetObjectId() == activeObject.GetInstanceID()).FirstOrDefault();
+                if(character == null)
+                {
+                    return;
+                }
+                text.text = character.GetInfo();
+                text.gameObject.SetActive(true);
+                return;
+            }
+            activeObject = null;
             text.gameObject.SetActive(false);
         }
-        private GameObject PlayerLookingAtPot()
+        private GameObject PlayerLookingAtObj()
         {
             Ray ray = cam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
             RaycastHit hit;
             Physics.Raycast(ray, out hit, 5f);
             if (hit.collider != null)
             {
-                if (hit.collider.gameObject.tag == Consts.Tags.Pot)
-                {
-                    return hit.collider.gameObject;
-                }
+                return hit.collider.gameObject;
+                //if (hit.collider.gameObject.tag == tag)
+                //{
+                //    return hit.collider.gameObject;
+                //}
             }
             return null;
         }

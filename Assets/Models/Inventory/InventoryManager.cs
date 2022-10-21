@@ -22,6 +22,7 @@ namespace Assets.Models.Inventory
         //INVENTORY LISTS 
         private readonly static List<Tomato.Tomato> tomatoes = new List<Tomato.Tomato>();
         private readonly static List<Seed> seeds = new List<Seed>();
+        private readonly static float balance = 1f;
 
         public InventoryManager()
         {
@@ -158,6 +159,10 @@ namespace Assets.Models.Inventory
                     x.Value.color = Color.white;
                 }
             }
+        }
+        public static float GetBalance()
+        {
+            return balance;
         }
     }
     public class TextMessage
