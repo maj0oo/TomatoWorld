@@ -58,7 +58,5 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
-# blender model tomato model
-/[Aa]ssets/TomatoBlenderModel/*
 
 
