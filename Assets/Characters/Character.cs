@@ -30,6 +30,7 @@ namespace Assets.Characters
             {
                 if (Input.GetKeyDown(KeyCode.E))
                 {
+                    PlayerMovement.busy = true;
                     busy = true;
                     characterMngr.panel = new Panel(this.answersPanel);
                     characterMngr.panel.OpenPanel(type);
@@ -58,14 +59,42 @@ namespace Assets.Characters
                 {
                     case CharacterType.dealer:
                         {
-                            AddText(Consts.DealerAnswers.buySeeds);
-                            AddText(Consts.DealerAnswers.buyTomatoes);
-
+                            AddText(Consts.DealerAnswers.buySeeds, TextItem.TextItemType.parent);
+                            AddText(Consts.DealerAnswers.buyTomatoes, TextItem.TextItemType.parent);
+                            AddText(Consts.Translations.end, TextItem.TextItemType.exit);
                             break;
                         }
                 }
             }
-            private void AddText(string name)
+            public void ActiveNext()
+            {
+                int activeItemIndex = items.IndexOf(items.Where(i => i.active == true).FirstOrDefault());
+                if(activeItemIndex == items.Count - 1)
+                {
+                    items[0].Active();
+                    UnactiveExcept(items[0]);
+                    return;
+                }
+                items[activeItemIndex + 1].Active();
+                UnactiveExcept(items[activeItemIndex + 1]);
+            }
+            public void ActivePrev()
+            {
+                int activeItemIndex = items.IndexOf(items.Where(i => i.active == true).FirstOrDefault());
+                if (activeItemIndex == 0)
+                {
+                    items[items.Count - 1].Active();
+                    UnactiveExcept(items[items.Count -1]);
+                    return;
+                }
+                items[activeItemIndex - 1].Active();
+                UnactiveExcept(items[activeItemIndex -1]);
+            }
+            private void UnactiveExcept(TextItem item)
+            {
+                items.Where(i => i.active == true && i != item).FirstOrDefault().Deactive();
+            }
+            private void AddText(string name, TextItem.TextItemType type)
             {
                 Vector3 textPos = new Vector3(-180, -10 - items.Count * 20);
                 GameObject buySeedGO = new GameObject(name);
@@ -74,26 +103,68 @@ namespace Assets.Characters
                 var text = buySeedGO.GetComponent<Text>();
                 text.text = name;
                 text.alignment = TextAnchor.UpperLeft;
-                if(items.Count == 0)
+                TextItem item = new TextItem(text, type);
+                items.Add(item);
+                if (items.Count == 1)
                 {
                     text.color = Color.green;
+                    item.active = true;
                 }
                 var rectTransform = text.GetComponent<RectTransform>();
                 rectTransform.localPosition = textPos;
                 text.font = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
                 buySeedGO.transform.SetParent(answersPanel.transform);
-
-                TextItem item = new TextItem(text);
-                items.Add(item);
             }
         }
-        class TextItem
+        class TextItem :  MonoBehaviour, IDisposable
         {
             public bool active = false;
             public Text textObj;
-            public TextItem(Text text)
+            public List<TextItem> items = new List<TextItem>();
+            TextItemType type;
+
+            public TextItem(Text text, TextItemType type)
             {
                 textObj = text;
+                this.type = type;
+            }
+            public void Choose()
+            {
+                switch (type)
+                {
+                    case TextItemType.exit:
+                        {
+                            break;
+                        }
+                    case TextItemType.parent:
+                        {
+                            break;
+                        }
+                }
+            }
+            public void Active()
+            {
+                active = true;
+                textObj.color = Color.green;
+            }
+            public void Deactive()
+            {
+                active = false;
+                textObj.color = Color.white;
+            }
+            public void Dispose()
+            {
+                foreach(TextItem i in items)
+                {
+                    i.Dispose();
+                }
+                items = null;
+                Destroy(textObj);
+            }
+            public enum TextItemType
+            {
+                parent = 0,
+                exit = 1
             }
         }
     }

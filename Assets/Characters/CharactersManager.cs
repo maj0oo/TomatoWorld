@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 using static Assets.Characters.Character;
 
 namespace Assets.Characters
@@ -18,7 +19,14 @@ namespace Assets.Characters
             {
                 return;
             }
-            //TODO add on input change selected option
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                panel.ActivePrev();
+            }
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                panel.ActiveNext();
+            }
         }
     }
     public enum CharacterType

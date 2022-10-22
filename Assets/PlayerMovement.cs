@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     bool isGrounded;
     private LookManager lookManager;
     private InventoryManager inventoryManager;
+    public static bool busy = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -36,7 +37,25 @@ public class PlayerMovement : MonoBehaviour
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        if(isGrounded && velocity.y < 0)
+        if (!busy)
+        {
+            Move();
+        }
+        
+        lookManager.CheckLook();
+        inventoryManager.UpdateTextInfo();
+        if(Input.GetAxis("Mouse ScrollWheel") > 0f)
+        {
+            inventoryManager.SwitchTomatoType(scrollType.up);
+        }
+        if (Input.GetAxis("Mouse ScrollWheel") < 0f)
+        {
+            inventoryManager.SwitchTomatoType(scrollType.down);
+        }
+    }
+    private void Move()
+    {
+        if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
         }
@@ -57,24 +76,14 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 move = move = transform.right * x + transform.forward * z;
 
-        controller.Move(move * (Input.GetKey(KeyCode.LeftShift)? speed * 2 : speed) * Time.deltaTime);
+        controller.Move(move * (Input.GetKey(KeyCode.LeftShift) ? speed * 2 : speed) * Time.deltaTime);
 
-        if(Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
         }
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
-        lookManager.CheckLook();
-        inventoryManager.UpdateTextInfo();
-        if(Input.GetAxis("Mouse ScrollWheel") > 0f)
-        {
-            inventoryManager.SwitchTomatoType(scrollType.up);
-        }
-        if (Input.GetAxis("Mouse ScrollWheel") < 0f)
-        {
-            inventoryManager.SwitchTomatoType(scrollType.down);
-        }
     }
 }
