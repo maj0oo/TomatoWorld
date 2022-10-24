@@ -17,7 +17,7 @@ public class NPCScript : MonoBehaviour
         for(int i = 0; i < dealers.Length; i++)
         {
             Character character = new Character(dealers[i], CharacterType.dealer, answersPanel, charactersMngr);
-            CharactersManager.characters.Add(character);
+            CharactersManager.characters.Add(character);   
         }
     }
 

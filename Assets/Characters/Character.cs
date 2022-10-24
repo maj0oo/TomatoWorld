@@ -32,7 +32,7 @@ namespace Assets.Characters
                 {
                     PlayerMovement.busy = true;
                     busy = true;
-                    characterMngr.panel = new Panel(this.answersPanel);
+                    characterMngr.panel = new Panel(this);
                     characterMngr.panel.OpenPanel(type);
                 }
                 return Consts.Translations.talk;
@@ -47,14 +47,14 @@ namespace Assets.Characters
         public class Panel
         {
             private List<TextItem> items = new List<TextItem>();
-            public GameObject answersPanel;
-            public Panel(GameObject answersPanel)
+            public readonly Character character;
+            public Panel(Character character)
             {
-                this.answersPanel = answersPanel;
+                this.character = character;
             }
             public void OpenPanel(CharacterType type)
             {
-                answersPanel.SetActive(true);
+                character.answersPanel.SetActive(true);
                 switch (type)
                 {
                     case CharacterType.dealer:
@@ -66,6 +66,7 @@ namespace Assets.Characters
                         }
                 }
             }
+          
             public void ActiveNext()
             {
                 int activeItemIndex = items.IndexOf(items.Where(i => i.active == true).FirstOrDefault());
@@ -92,18 +93,30 @@ namespace Assets.Characters
             }
             private void UnactiveExcept(TextItem item)
             {
-                items.Where(i => i.active == true && i != item).FirstOrDefault().Deactive();
+                var itemToDeactive = items.Where(i => i.active == true && i != item).FirstOrDefault();
+                if(itemToDeactive != null)
+                {
+                    itemToDeactive.Deactive();
+                }
+            }
+            public void ChooseActive()
+            {
+                var activeItem = items.Where(i => i.active).FirstOrDefault();
+                if(activeItem != null)
+                {
+                    activeItem.Choose();
+                }
             }
             private void AddText(string name, TextItem.TextItemType type)
             {
                 Vector3 textPos = new Vector3(-180, -10 - items.Count * 20);
                 GameObject buySeedGO = new GameObject(name);
-                buySeedGO.transform.parent = answersPanel.transform;
+                buySeedGO.transform.parent = character.answersPanel.transform;
                 buySeedGO.AddComponent<Text>();
                 var text = buySeedGO.GetComponent<Text>();
                 text.text = name;
                 text.alignment = TextAnchor.UpperLeft;
-                TextItem item = new TextItem(text, type);
+                TextItem item = new TextItem(text, type, this);
                 items.Add(item);
                 if (items.Count == 1)
                 {
@@ -113,20 +126,33 @@ namespace Assets.Characters
                 var rectTransform = text.GetComponent<RectTransform>();
                 rectTransform.localPosition = textPos;
                 text.font = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
-                buySeedGO.transform.SetParent(answersPanel.transform);
+                buySeedGO.transform.SetParent(character.answersPanel.transform);
+            }
+            public void Exit()
+            {
+                foreach(TextItem item in items)
+                {
+                    item.Dispose();
+                }
+                character.busy = false;
+                PlayerMovement.busy = false;
+                items.Clear();
+                character.answersPanel.SetActive(false);
             }
         }
-        class TextItem :  MonoBehaviour, IDisposable
+        class TextItem : IDisposable
         {
             public bool active = false;
             public Text textObj;
             public List<TextItem> items = new List<TextItem>();
             TextItemType type;
+            private readonly Panel panel;
 
-            public TextItem(Text text, TextItemType type)
+            public TextItem(Text text, TextItemType type, Panel panel)
             {
                 textObj = text;
                 this.type = type;
+                this.panel = panel;
             }
             public void Choose()
             {
@@ -134,10 +160,12 @@ namespace Assets.Characters
                 {
                     case TextItemType.exit:
                         {
+                            panel.Exit();
                             break;
                         }
                     case TextItemType.parent:
                         {
+
                             break;
                         }
                 }
@@ -159,7 +187,7 @@ namespace Assets.Characters
                     i.Dispose();
                 }
                 items = null;
-                Destroy(textObj);
+                Text.Destroy(textObj);
             }
             public enum TextItemType
             {

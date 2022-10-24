@@ -15,7 +15,7 @@ namespace Assets.Characters
         
         public void RefreshPanel()
         {
-            if(panel == null)
+            if(panel == null || !panel.character.answersPanel.activeInHierarchy)
             {
                 return;
             }
@@ -26,6 +26,10 @@ namespace Assets.Characters
             if (Input.GetKeyDown(KeyCode.S))
             {
                 panel.ActiveNext();
+            }
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                panel.ChooseActive();
             }
         }
     }
