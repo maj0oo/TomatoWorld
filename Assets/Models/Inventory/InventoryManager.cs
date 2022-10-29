@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,7 +23,10 @@ namespace Assets.Models.Inventory
         //INVENTORY LISTS 
         private readonly static List<Tomato.Tomato> tomatoes = new List<Tomato.Tomato>();
         private readonly static List<Seed> seeds = new List<Seed>();
-        private readonly static float balance = 1f;
+
+        //BALANCE
+        private static int balance = 10;
+        private static Text balanceText;
 
         public InventoryManager()
         {
@@ -35,6 +39,21 @@ namespace Assets.Models.Inventory
         public static void AddSeed(Seed seed)
         {
             seeds.Add(seed);
+        }
+        public static void SetBalanceText(Text text)
+        {
+            balanceText = text;
+            balanceText.text = balance.ToString();
+        }
+        public static bool SubBalance(int price)
+        {
+            if(balance - price >= 0)
+            {
+                balance = balance - price;
+                balanceText.text = balance.ToString();
+                return true;
+            }
+            return false;
         }
         public static void GenerateSeed(TomatoType type, int count)
         {

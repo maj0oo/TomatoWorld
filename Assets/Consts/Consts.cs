@@ -32,11 +32,20 @@ namespace Assets
             public const string notEnaugthSeeds = "Nie posiadasz nasion!";
             public const string pomidorUrusl = "Pomidor ##name Urusł";
             public const string end = "Koniec";
+            public const string noEnaugthBalance = "Nie posiadasz wystarczająco dużo pienidędzy";
         }
         public class DealerAnswers
         {
             public const string buySeeds = "Kup nasiona";
             public const string buyTomatoes = "Kup pomidory";
+            public const string buyMalinowySeeds = "Kup nasiona pomidora malinowego (#price $)";
+            public const string buyKoktajlowySeeds = "Kup nasiona pomidora koktajlowegp (#price $)";
+            public const string buyDaktylowySeeds = "Kup nasiona pomidora daktylowego (#price $)";
+            public const string buyPodluznySeeds = "Kup nasiona pomidora podłużnego (#price $)";
+            public const string buyMalinowyTomato = "Kup pomidora malinowego (#price $)";
+            public const string buyKoktajlowyTomato = "Kup pomidora koktajlowegp (#price $)";
+            public const string buyDaktylowyTomato = "Kup pomidora daktylowego (#price $)";
+            public const string buyPodluznyTomato = "Kup pomidora podłużnego (#price $)";
         }
     }
 }

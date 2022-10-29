@@ -1,10 +1,14 @@
-﻿using System;
+﻿using Assets.Models.Inventory;
+using Assets.Models.Tomato;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using static Assets.Characters.Character;
 
 namespace Assets.Characters
 {
@@ -59,8 +63,8 @@ namespace Assets.Characters
                 {
                     case CharacterType.dealer:
                         {
-                            AddText(Consts.DealerAnswers.buySeeds, TextItem.TextItemType.parent);
-                            AddText(Consts.DealerAnswers.buyTomatoes, TextItem.TextItemType.parent);
+                            AddText(Consts.DealerAnswers.buySeeds, TextItem.TextItemType.parent,TextItem.ChildItemsType.buySeeds);
+                            AddText(Consts.DealerAnswers.buyTomatoes, TextItem.TextItemType.parent, TextItem.ChildItemsType.buyTomatos);
                             AddText(Consts.Translations.end, TextItem.TextItemType.exit);
                             break;
                         }
@@ -107,32 +111,104 @@ namespace Assets.Characters
                     activeItem.Choose();
                 }
             }
-            private void AddText(string name, TextItem.TextItemType type)
+            private void AddText(string name, TextItem.TextItemType type, TextItem.ChildItemsType? childsType = null)
             {
-                Vector3 textPos = new Vector3(-180, -10 - items.Count * 20);
-                GameObject buySeedGO = new GameObject(name);
-                buySeedGO.transform.parent = character.answersPanel.transform;
-                buySeedGO.AddComponent<Text>();
-                var text = buySeedGO.GetComponent<Text>();
-                text.text = name;
-                text.alignment = TextAnchor.UpperLeft;
-                TextItem item = new TextItem(text, type, this);
+                var text = CreateTextObj(name, new Vector3(-180, -10 - items.Count * 20));
+                
+                TextItem item = new TextItem(type, this);
+                item.textObj = text;
+                if(childsType != null)
+                {
+                    item.items = GetChilds(childsType);
+                }
                 items.Add(item);
                 if (items.Count == 1)
                 {
                     text.color = Color.green;
                     item.active = true;
                 }
+                
+            }
+            public void EnableChilds(List<TextItem> childItems)
+            {
+                foreach (TextItem item in items)
+                {
+                    item.Dispose();
+                }
+                foreach (Transform child in character.answersPanel.transform)
+                {
+                    GameObject.Destroy(child.gameObject);
+                }
+                items.Clear();
+                foreach(TextItem childItem in childItems)
+                {
+                    var text = CreateTextObj(childItem.text, new Vector3(-180, -10 - items.Count * 20));
+                    childItem.textObj = text;
+                    items.Add(childItem);
+                    if(items.Count == 1)
+                    {
+                        text.color = Color.green;
+                        childItem.active = true;
+                    }
+                }
+            }
+            private Text CreateTextObj(string name, Vector3 position)
+            {
+                Vector3 textPos = new Vector3(-30, 10 - items.Count * 20);
+                GameObject GO = new GameObject(name);
+                GO.transform.parent = character.answersPanel.transform;
+                GO.AddComponent<Text>();
+                var text = GO.GetComponent<Text>();
+                GO.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 400);
+                text.text = name;
+                text.alignment = TextAnchor.UpperLeft;
                 var rectTransform = text.GetComponent<RectTransform>();
                 rectTransform.localPosition = textPos;
                 text.font = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
-                buySeedGO.transform.SetParent(character.answersPanel.transform);
+                GO.transform.SetParent(character.answersPanel.transform);
+                return text;
+            }
+            private List<TextItem> GetChilds(TextItem.ChildItemsType? type)
+            {
+                List<TextItem> childItems = new List<TextItem>();
+                switch (type)
+                {
+                    case TextItem.ChildItemsType.buySeeds:
+                        {
+                            childItems.Add(CreateTextItemObject(Consts.DealerAnswers.buyMalinowySeeds.Replace("#price", "1"), TextItem.TextItemType.buySeed, TomatoType.malinowy, 1));
+                            childItems.Add(CreateTextItemObject(Consts.DealerAnswers.buyKoktajlowySeeds.Replace("#price", "10"), TextItem.TextItemType.buySeed, TomatoType.koktajlowy, 10));
+                            childItems.Add(CreateTextItemObject(Consts.DealerAnswers.buyDaktylowySeeds.Replace("#price", "50"), TextItem.TextItemType.buySeed, TomatoType.daktylowy, 50));
+                            childItems.Add(CreateTextItemObject(Consts.DealerAnswers.buyPodluznySeeds.Replace("#price", "100"), TextItem.TextItemType.buySeed, TomatoType.podluzny, 100));
+                            childItems.Add(CreateTextItemObject(Consts.Translations.end, TextItem.TextItemType.exit));
+                            break;
+                        }
+                    case TextItem.ChildItemsType.buyTomatos:
+                        {
+                            childItems.Add(CreateTextItemObject(Consts.DealerAnswers.buyMalinowyTomato.Replace("#price", "10"), TextItem.TextItemType.buyTomato, TomatoType.malinowy, 10));
+                            childItems.Add(CreateTextItemObject(Consts.DealerAnswers.buyKoktajlowyTomato.Replace("#price", "100"), TextItem.TextItemType.buyTomato, TomatoType.koktajlowy, 100));
+                            childItems.Add(CreateTextItemObject(Consts.DealerAnswers.buyDaktylowyTomato.Replace("#price", "500"), TextItem.TextItemType.buyTomato, TomatoType.daktylowy, 500));
+                            childItems.Add(CreateTextItemObject(Consts.DealerAnswers.buyPodluznyTomato.Replace("#price", "1000"), TextItem.TextItemType.buyTomato, TomatoType.podluzny, 1000));
+                            childItems.Add(CreateTextItemObject(Consts.Translations.end, TextItem.TextItemType.exit));
+                            break;
+                        }
+                }
+                return childItems;
+            }
+            private TextItem CreateTextItemObject(string text, TextItem.TextItemType type, TomatoType? tomatoType = null, int price = 0)
+            {
+                TextItem item = new TextItem(type, this, tomatoType, price);
+                item.text = text;
+                return item;
             }
             public void Exit()
             {
-                foreach(TextItem item in items)
+                foreach (TextItem item in items)
                 {
                     item.Dispose();
+                }
+                foreach (Transform child in character.answersPanel.transform)
+                {
+                    GameObject.Destroy(child.gameObject);
                 }
                 character.busy = false;
                 PlayerMovement.busy = false;
@@ -140,21 +216,25 @@ namespace Assets.Characters
                 character.answersPanel.SetActive(false);
             }
         }
-        class TextItem : IDisposable
+        public class TextItem : IDisposable
         {
             public bool active = false;
             public Text textObj;
+            public string text = String.Empty;
             public List<TextItem> items = new List<TextItem>();
             TextItemType type;
             private readonly Panel panel;
+            public int price = 0;
+            public TomatoType? tomatoType;
 
-            public TextItem(Text text, TextItemType type, Panel panel)
+            public TextItem(TextItemType type, Panel panel, TomatoType? tomatoType = null, int price = 0)
             {
-                textObj = text;
                 this.type = type;
                 this.panel = panel;
+                this.price = price;
+                this.tomatoType = tomatoType;
             }
-            public void Choose()
+            public List<TextItem> Choose()
             {
                 switch (type)
                 {
@@ -165,10 +245,38 @@ namespace Assets.Characters
                         }
                     case TextItemType.parent:
                         {
-
+                            panel.EnableChilds(items);
                             break;
                         }
+                    case TextItemType.buySeed:
+                        {
+                            bool bougth = InventoryManager.SubBalance(price);
+                            if (bougth && tomatoType != null)
+                            {
+                                InventoryManager.AddSeed(new Seed((TomatoType)tomatoType));
+                            }
+                            else
+                            {
+                                InventoryManager.DisplayInfo(Consts.Translations.noEnaugthBalance);
+                            }
+                            break;
+                        }
+                    case TextItemType.buyTomato:
+                        {
+                            bool bougth = InventoryManager.SubBalance(price);
+                            if (bougth && tomatoType != null)
+                            {
+                                InventoryManager.AddTomato(new Tomato((TomatoType)tomatoType, false));
+                            }
+                            else
+                            {
+                                InventoryManager.DisplayInfo(Consts.Translations.noEnaugthBalance);
+                            }
+                            break;
+                        }
+
                 }
+                return items;
             }
             public void Active()
             {
@@ -182,17 +290,29 @@ namespace Assets.Characters
             }
             public void Dispose()
             {
-                foreach(TextItem i in items)
+                
+                if (items != null)
                 {
-                    i.Dispose();
+                    foreach (TextItem i in items)
+                    {
+                        i.Dispose();
+                    }
                 }
                 items = null;
-                Text.Destroy(textObj);
+                GameObject.Destroy(textObj);
+                
             }
             public enum TextItemType
             {
                 parent = 0,
-                exit = 1
+                exit = 1,
+                buySeed = 2,
+                buyTomato = 3
+            }
+            public enum ChildItemsType
+            {
+                buySeeds = 0,
+                buyTomatos = 1
             }
         }
     }

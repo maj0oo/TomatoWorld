@@ -10,7 +10,7 @@ namespace Assets.Characters
 {
     class CharactersManager
     {
-        public Panel panel;
+        public Character.Panel panel;
         public static List<Character> characters = new List<Character>();
         
         public void RefreshPanel()

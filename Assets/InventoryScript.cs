@@ -29,14 +29,18 @@ namespace Assets
         public Text tomatoKoktajlowyText;
         public Text tomatoDaktylowyText;
         public Text tomatoPodluznyText;
+
+        //BALANCE TEXT
+        public Text balanceText;
         void Start()
         {
             InventoryManager.GenerateSeed(TomatoType.malinowy, 10);
-
+            InventoryManager.SetBalanceText(balanceText);
             SetTomatoText(TomatoType.malinowy, tomatoMalinowyText);
             SetTomatoText(TomatoType.koktajlowy, tomatoKoktajlowyText);
             SetTomatoText(TomatoType.daktylowy, tomatoDaktylowyText);
             SetTomatoText(TomatoType.podluzny, tomatoPodluznyText);
+
         }
 
         void Update()
@@ -50,6 +54,7 @@ namespace Assets
             tomatoKoktajlowy.text = InventoryManager.GetTomatoCount(TomatoType.koktajlowy).ToString();
             tomatoDaktylowy.text = InventoryManager.GetTomatoCount(TomatoType.daktylowy).ToString();
             tomatoPodluzny.text = InventoryManager.GetTomatoCount(TomatoType.podluzny).ToString();
+
 
         }
         private void SetTomatoText(TomatoType type, Text text)

@@ -15,12 +15,15 @@ namespace Assets.Models.Tomato
         public int growTime => GetGrowTime(type);
         public bool collected = false;
         public TomatoType type;
-        public Tomato(TomatoType type)
+        public Tomato(TomatoType type, bool planted = true)
         {
             this.type = type;
             name = GetTomatoName(type);
-            timer = new Timer(TimeSpan.FromSeconds(growTime));
-            timer.timeElapsed += Timer_timeElapsed;
+            if (planted)
+            {
+                timer = new Timer(TimeSpan.FromSeconds(growTime));
+                timer.timeElapsed += Timer_timeElapsed;
+            }
         }
         public string GetTime()
         {
