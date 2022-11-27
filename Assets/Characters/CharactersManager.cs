@@ -35,7 +35,8 @@ namespace Assets.Characters
     }
     public enum CharacterType
     {
-        dealer = 1,
+        dealer = 0,
+        boss = 1
     }
     class SeedPrices
     {

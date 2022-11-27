@@ -14,10 +14,16 @@ public class NPCScript : MonoBehaviour
         var answersPanel = GameObject.Find(Consts.Tags.AnswersPanel);
         answersPanel.SetActive(false);
         var dealers = GameObject.FindGameObjectsWithTag(Consts.Tags.Dealer);
+        var bosses = GameObject.FindGameObjectsWithTag(Consts.Tags.Boss);
         for(int i = 0; i < dealers.Length; i++)
         {
             Character character = new Character(dealers[i], CharacterType.dealer, answersPanel, charactersMngr);
             CharactersManager.characters.Add(character);   
+        }
+        for(int i = 0; i < bosses.Length; i++)
+        {
+            Character character = new Character(bosses[i], CharacterType.boss, answersPanel, charactersMngr);
+            CharactersManager.characters.Add(character);
         }
     }
 

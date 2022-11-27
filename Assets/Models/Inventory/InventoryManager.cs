@@ -21,8 +21,8 @@ namespace Assets.Models.Inventory
         private static ConcurrentDictionary<TomatoType, Text> tomatoesTexts = new ConcurrentDictionary<TomatoType, Text>();
 
         //INVENTORY LISTS 
-        private readonly static List<Tomato.Tomato> tomatoes = new List<Tomato.Tomato>();
-        private readonly static List<Seed> seeds = new List<Seed>();
+        private static List<Tomato.Tomato> tomatoes = new List<Tomato.Tomato>();
+        private static List<Seed> seeds = new List<Seed>();
 
         //BALANCE
         private static int balance = 10;
@@ -55,6 +55,11 @@ namespace Assets.Models.Inventory
             }
             return false;
         }
+        public static void AddBalance(int toAdd)
+        {
+            balance += toAdd;
+            balanceText.text = balance.ToString();
+        }
         public static void GenerateSeed(TomatoType type, int count)
         {
             for(int i = 0; i < count; i++)
@@ -70,6 +75,40 @@ namespace Assets.Models.Inventory
         public static bool RemoveSeed(Seed seed)
         {
             return seeds.Remove(seed);
+        }
+        public static bool RemoveSeeds(int count, TomatoType type)
+        {
+            try
+            {
+                var allSeedsWithType = seeds.Where(s => s.type == type).ToList();
+                for (int i = 0; i < count; i++)
+                {
+                    seeds.Remove(allSeedsWithType[i]);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.Log($"Could not remove seeds: {ex.Message}");
+                return false;
+            }
+        }
+        public static bool RemoveTomatoes(int count, TomatoType type)
+        {
+            try
+            {
+                var allTomatoesWithType = tomatoes.Where(t => t.type == type).ToList();
+                for(int i = 0; i < count; i++)
+                {
+                    tomatoes.Remove(allTomatoesWithType[i]);
+                }
+                return true;
+            }catch(Exception ex)
+            {
+                Debug.Log($"Could not remove tomatoes: {ex.Message}");
+                return false;
+            }
+            
         }
         public static int GetSeedCount(TomatoType type)
         {

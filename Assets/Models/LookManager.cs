@@ -48,6 +48,18 @@ namespace Assets.Models
                 text.gameObject.SetActive(true);
                 return;
             }
+            if(obj != null && obj.tag == Consts.Tags.Boss)
+            {
+                activeObject = obj;
+                Character boss = CharactersManager.characters.Where(p => p.GetObjectId() == activeObject.GetInstanceID()).FirstOrDefault();
+                if(boss == null)
+                {
+                    return;
+                }
+                text.text = boss.GetInfo();
+                text.gameObject.SetActive(true);
+                return;
+            }
             activeObject = null;
             text.gameObject.SetActive(false);
         }
