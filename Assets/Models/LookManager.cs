@@ -71,12 +71,13 @@ namespace Assets.Models
             if (hit.collider != null)
             {
                 return hit.collider.gameObject;
-                //if (hit.collider.gameObject.tag == tag)
-                //{
-                //    return hit.collider.gameObject;
-                //}
             }
             return null;
+        }
+        public void ChangeNewPotPlace()
+        {
+            Vector3 v = cam.ViewportToWorldPoint(new Vector3(0.5f, 0, 2.5f));
+            PotsManager.ChangeNewPotPlace(v);
         }
     }
 }

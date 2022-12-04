@@ -9,8 +9,9 @@ namespace Assets
     public class GlobalParams
     {
         public static int questCount = 3;
-        public static TimeSpan dayLength = TimeSpan.FromMinutes(1);
+        public static TimeSpan dayLength = TimeSpan.FromSeconds(20);
         public static DayState dayState;
+        public static int PotPrice = 100;
         public enum DayState
         {
             night = 0,

@@ -43,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
         }
         
         lookManager.CheckLook();
+        lookManager.ChangeNewPotPlace();
         inventoryManager.UpdateTextInfo();
         if(Input.GetAxis("Mouse ScrollWheel") > 0f)
         {

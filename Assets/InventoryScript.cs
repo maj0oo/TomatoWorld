@@ -30,17 +30,22 @@ namespace Assets
         public Text tomatoDaktylowyText;
         public Text tomatoPodluznyText;
 
+        //POT
+        public Text potText;
+        public Text potCount;
+
         //BALANCE TEXT
         public Text balanceText;
         void Start()
         {
             InventoryManager.GenerateSeed(TomatoType.malinowy, 10);
             InventoryManager.SetBalanceText(balanceText);
-            SetTomatoText(TomatoType.malinowy, tomatoMalinowyText);
-            SetTomatoText(TomatoType.koktajlowy, tomatoKoktajlowyText);
-            SetTomatoText(TomatoType.daktylowy, tomatoDaktylowyText);
-            SetTomatoText(TomatoType.podluzny, tomatoPodluznyText);
-
+            InventoryManager.SetPotText(potCount);
+            SetInventoryText(InventoryType.malinowy, tomatoMalinowyText);
+            SetInventoryText(InventoryType.koktajlowy, tomatoKoktajlowyText);
+            SetInventoryText(InventoryType.daktylowy, tomatoDaktylowyText);
+            SetInventoryText(InventoryType.podluzny, tomatoPodluznyText);
+            SetInventoryText(InventoryType.pot, potText);
         }
 
         void Update()
@@ -57,9 +62,9 @@ namespace Assets
 
 
         }
-        private void SetTomatoText(TomatoType type, Text text)
+        private void SetInventoryText(InventoryType type, Text text)
         {
-            bool added = InventoryManager.SetTomatoText(type, text);
+            bool added = InventoryManager.SetInventoryText(type, text);
             if (!added)
             {
                 Debug.Log($"Could not add {typeof(Text)} tomato [{type}] to inventoryManager");

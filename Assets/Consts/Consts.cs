@@ -31,6 +31,7 @@ namespace Assets
             public const string seedDaktylowy = "nasiono pomidora daktylowego";
             public const string seedPodluzny = "nasiono pomidora daktylowego";
             public const string notEnaugthSeeds = "Nie posiadasz nasion!";
+            public const string youHaveToChoseSeed = "Musisz wybrać nasiono!";
             public const string pomidorUrusl = "Pomidor ##name Urusł";
             public const string end = "Koniec";
             public const string noEnaugthBalance = "Nie posiadasz wystarczająco dużo pienidędzy";
@@ -50,6 +51,7 @@ namespace Assets
             public const string buyKoktajlowyTomato = "Kup pomidora koktajlowegp (#price $)";
             public const string buyDaktylowyTomato = "Kup pomidora daktylowego (#price $)";
             public const string buyPodluznyTomato = "Kup pomidora podłużnego (#price $)";
+            public const string buyPot = "Kup doniczkę (#price $)";
         }
         public class BossAnswers
         {

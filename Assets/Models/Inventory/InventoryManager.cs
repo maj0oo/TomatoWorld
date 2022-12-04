@@ -1,4 +1,5 @@
-﻿using Assets.Models.Tomato;
+﻿using Assets.Models.Pots;
+using Assets.Models.Tomato;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -17,12 +18,16 @@ namespace Assets.Models.Inventory
         public static Text info;
         private readonly static List<TextMessage> messages = new List<TextMessage>();
 
-        public static TomatoType ChosedTomato = TomatoType.malinowy;
-        private static ConcurrentDictionary<TomatoType, Text> tomatoesTexts = new ConcurrentDictionary<TomatoType, Text>();
+        public static InventoryType ChosedOption = InventoryType.malinowy;
+        private static ConcurrentDictionary<InventoryType, Text> tomatoesTexts = new ConcurrentDictionary<InventoryType, Text>();
 
         //INVENTORY LISTS 
         private static List<Tomato.Tomato> tomatoes = new List<Tomato.Tomato>();
         private static List<Seed> seeds = new List<Seed>();
+
+        //POTS
+        private static int potsCollected = 0;
+        private static Text potCountText;
 
         //BALANCE
         private static int balance = 10;
@@ -30,7 +35,7 @@ namespace Assets.Models.Inventory
 
         public InventoryManager()
         {
-            ChangeTomatoHighlight(ChosedTomato);
+            ChangeTomatoHighlight(ChosedOption);
         }
         public static void AddTomato(Tomato.Tomato tomato)
         {
@@ -40,10 +45,26 @@ namespace Assets.Models.Inventory
         {
             seeds.Add(seed);
         }
+        public static void AddPot()
+        {
+            potsCollected++;
+        }
+        public static void RemovePot()
+        {
+            if(potsCollected > 0)
+            {
+                potsCollected--;
+            }
+        }
         public static void SetBalanceText(Text text)
         {
             balanceText = text;
             balanceText.text = balance.ToString();
+        }
+        public static void SetPotText(Text text)
+        {
+            potCountText = text;
+            potCountText.text = potsCollected.ToString();
         }
         public static bool SubBalance(int price)
         {
@@ -155,64 +176,50 @@ namespace Assets.Models.Inventory
         {
             if(scroll == scrollType.down)
             {
-                if ((int)ChosedTomato >= Enum.GetNames(typeof(TomatoType)).Length - 1)
+                if ((int)ChosedOption >= Enum.GetNames(typeof(InventoryType)).Length - 1)
                 {
-                    ChosedTomato = 0;
+                    ChosedOption = 0;
                 }
                 else
                 {
-                    ChosedTomato = ChosedTomato + 1;
+                    ChosedOption = ChosedOption + 1;
                 }
             }
             if (scroll == scrollType.up)
             {
-                if ((int)ChosedTomato <= 0)
+                if ((int)ChosedOption <= 0)
                 {
-                    ChosedTomato = (TomatoType)Enum.GetNames(typeof(TomatoType)).Length - 1;
+                    ChosedOption = (InventoryType)Enum.GetNames(typeof(InventoryType)).Length - 1;
                 }
                 else
                 {
-                    ChosedTomato = ChosedTomato - 1;
+                    ChosedOption = ChosedOption - 1;
                 }
             }
-            ChangeTomatoHighlight(ChosedTomato);
+            ChangeTomatoHighlight(ChosedOption);
+            if(ChosedOption == InventoryType.pot)
+            {
+                PotsManager.BeginPotPlace();
+            }
+            else
+            {
+                PotsManager.CancelPotPlace();
+            }
         }
-        public static bool SetTomatoText(TomatoType type, Text textObj)
+        public static bool SetInventoryText(InventoryType type, Text textObj)
         {
             return tomatoesTexts.TryAdd(type, textObj);
         }
-        private void ChangeTomatoHighlight(TomatoType tomato)
+        private void ChangeTomatoHighlight(InventoryType option)
         {
-            switch (tomato)
-            {
-                case TomatoType.malinowy:
-                    {
-                        tomatoesTexts[TomatoType.malinowy].color = Color.green;
-                        break;
-                    }
-                case TomatoType.koktajlowy:
-                    {
-                        tomatoesTexts[TomatoType.koktajlowy].color = Color.green;
-                        break;
-                    }
-                case TomatoType.daktylowy:
-                    {
-                        tomatoesTexts[TomatoType.daktylowy].color = Color.green;
-                        break;
-                    }
-                case TomatoType.podluzny:
-                    {
-                        tomatoesTexts[TomatoType.podluzny].color = Color.green;
-                        break;
-                    }
-            }
-            SetRestOfTextsWhite(tomato);
+            tomatoesTexts[option].color = Color.green;
+            SetRestOfTextsWhite(option);
         }
-        private void SetRestOfTextsWhite(TomatoType tomato)
+        private void SetRestOfTextsWhite(InventoryType option)
         {
             foreach(var x in tomatoesTexts)
             {
-                if(x.Key != tomato)
+                if(x.Key != option)
                 {
                     x.Value.color = Color.white;
                 }
@@ -239,5 +246,13 @@ namespace Assets.Models.Inventory
     {
         up = 0,
         down = 1
+    }
+    public enum InventoryType
+    {
+        malinowy = 0,
+        koktajlowy = 1,
+        daktylowy = 2,
+        podluzny = 3,
+        pot = 4
     }
 }

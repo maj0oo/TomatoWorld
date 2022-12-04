@@ -1,4 +1,5 @@
 ﻿using Assets.Models.Inventory;
+using Assets.Models.Tomato;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using UnityEngine;
 
 namespace Assets.Models.Pots
 {
-    class Pot
+    class Pot : IPot
     {
         public Tomato.Tomato tomato; 
         private GameObject potObject;
@@ -27,6 +28,10 @@ namespace Assets.Models.Pots
 
             currentState = PotsManager.State.potWithTomatos;
         }
+        public GameObject GetGameObject()
+        {
+            return potObject;
+        }
         private void AddObjectStateToDictionary(PotsManager.State state, string objName)
         {
             bool added = stateObjects.TryAdd(state, potObject.transform.Find(objName).gameObject);
@@ -35,14 +40,19 @@ namespace Assets.Models.Pots
         }
         public void PlantTomato()
         {
-            var seed = InventoryManager.GetSeed(InventoryManager.ChosedTomato);
+            if(InventoryManager.ChosedOption == InventoryType.pot)
+            {
+                InventoryManager.DisplayInfo(Consts.Translations.youHaveToChoseSeed);
+                return;
+            }
+            var seed = InventoryManager.GetSeed((TomatoType)InventoryManager.ChosedOption);
             if(seed == null)
             {
                 InventoryManager.DisplayInfo(Consts.Translations.notEnaugthSeeds);
                 return;
             }
             InventoryManager.RemoveSeed(seed);
-            tomato = new Tomato.Tomato(InventoryManager.ChosedTomato);
+            tomato = new Tomato.Tomato((TomatoType)InventoryManager.ChosedOption);
         }
         public void CollectTomato()
         {

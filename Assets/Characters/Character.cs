@@ -1,6 +1,7 @@
 ﻿
 using Assets.Characters.Quests;
 using Assets.Models.Inventory;
+using Assets.Models.Pots;
 using Assets.Models.Tomato;
 using System;
 using System.Collections.Generic;
@@ -76,6 +77,7 @@ namespace Assets.Characters
                         {
                             AddText(Consts.DealerAnswers.buySeeds, TextItem.TextItemType.parent,TextItem.ChildItemsType.buySeeds);
                             AddText(Consts.DealerAnswers.buyTomatoes, TextItem.TextItemType.parent, TextItem.ChildItemsType.buyTomatos);
+                            AddText(Consts.DealerAnswers.buyPot.Replace("#price", GlobalParams.PotPrice.ToString()), TextItem.TextItemType.buyPot, null, GlobalParams.PotPrice);
                             AddText(Consts.Translations.end, TextItem.TextItemType.exit);
                             break;
                         }
@@ -130,12 +132,16 @@ namespace Assets.Characters
                     activeItem.Choose();
                 }
             }
-            private void AddText(string name, TextItem.TextItemType type, TextItem.ChildItemsType? childsType = null)
+            private void AddText(string name, TextItem.TextItemType type, TextItem.ChildItemsType? childsType = null, int? price = null)
             {
                 var text = CreateTextObj(name, new Vector3(-180, -10 - items.Count * 20));
                 
                 TextItem item = new TextItem(type, this);
                 item.textObj = text;
+                if(price != null)
+                {
+                    item.price = (int)price;
+                }
                 if(childsType != null)
                 {
                     item.items = GetChilds(childsType);
@@ -383,6 +389,19 @@ namespace Assets.Characters
                             }
                             break;
                         }
+                    case TextItemType.buyPot:
+                        {
+                            bool bougth = InventoryManager.SubBalance(price);
+                            if (bougth)
+                            {
+                                InventoryManager.AddPot();
+                            }
+                            else
+                            {
+                                InventoryManager.DisplayInfo(Consts.Translations.noEnaugthBalance);
+                            }
+                            break;
+                        }
                 }
                 return items;
             }
@@ -425,7 +444,8 @@ namespace Assets.Characters
                 buyTomato = 3,
                 quest = 4,
                 sellTomato = 5,
-                sellSeed = 6
+                sellSeed = 6,
+                buyPot = 7
             }
             public enum ChildItemsType
             {

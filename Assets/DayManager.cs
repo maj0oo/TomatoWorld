@@ -65,6 +65,7 @@ namespace Assets
             }
             else
             {
+
                 GlobalParams.dayState = GlobalParams.DayState.day;
             }
             RegenerateQuests();
