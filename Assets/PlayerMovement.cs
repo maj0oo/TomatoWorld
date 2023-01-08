@@ -29,7 +29,6 @@ public class PlayerMovement : MonoBehaviour
         info.gameObject.SetActive(false);
         InventoryManager.info = info;
         lookManager = new LookManager(text, cam);
-        
     }
 
     // Update is called once per frame
@@ -41,7 +40,6 @@ public class PlayerMovement : MonoBehaviour
         {
             Move();
         }
-        
         lookManager.CheckLook();
         lookManager.ChangeNewPotPlace();
         inventoryManager.UpdateTextInfo();

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -76,8 +77,7 @@ namespace Assets.Models
         }
         public void ChangeNewPotPlace()
         {
-            Vector3 v = cam.ViewportToWorldPoint(new Vector3(0.5f, 0, 2.5f));
-            PotsManager.ChangeNewPotPlace(v);
+            PotsManager.ChangeNewPotPlace(cam.transform.position, cam.transform.forward);
         }
     }
 }

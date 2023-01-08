@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assembly_CSharp;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace Assets.Models.Pots
     {
         public static List<Pot> pots = new List<Pot>();
         private static GameObject newPotObject;
+        private const float distance = 5f;
 
         public static void BeginPotPlace()
         {
@@ -22,17 +24,32 @@ namespace Assets.Models.Pots
             {
                 return;
             }
-            newPotObject = Instantiate(pot.GetGameObject(), new Vector3(0,0,0), Quaternion.identity).gameObject;
+            newPotObject = Instantiate(pot.GetGameObject(), new Vector3(0,0,0), Quaternion.identity);
+            newPotObject.GetComponent<BoxCollider>().isTrigger = true;
+            newPotObject.AddComponent<Rigidbody>().isKinematic = true;
+            newPotObject.AddComponent<OnEnter>();
         }
-        public static void ChangeNewPotPlace(Vector3 place)
+        public static void ChangeNewPotPlace(Vector3 camPosition, Vector3 camForward)
         {
             if(newPotObject == null)
             {
                 return;
             }
-            Debug.Log(place);
-            Destroy(newPotObject);
-            newPotObject = Instantiate(newPotObject, new Vector3(place.x, 0, place.z), Quaternion.identity);
+            newPotObject.transform.position = GetNewObjectPosition(camPosition, camForward);
+            
+        }
+        private static Vector3 GetNewObjectPosition(Vector3 camPosition, Vector3 camForward)
+        {
+            var v = Vector3.Lerp(newPotObject.transform.position, camPosition + camForward * 5, Time.deltaTime * 20);
+            v.y = 0f;
+            if(Vector3.Distance(camPosition, v) > 4)
+            {
+                return v;
+            }
+            else
+            {
+                return newPotObject.transform.position;
+            }
         }
         public static void CancelPotPlace()
         {
