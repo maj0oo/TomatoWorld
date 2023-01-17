@@ -1,4 +1,5 @@
 ﻿using Assembly_CSharp;
+using Assets.Models.Inventory;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -16,18 +17,44 @@ namespace Assets.Models.Pots
         public static List<Pot> pots = new List<Pot>();
         private static GameObject newPotObject;
         private const float distance = 5f;
-
+        private static Color defaultColor;
+        public static bool isSettingNewPot => newPotObject != null;
         public static void BeginPotPlace()
         {
+            if (!InventoryManager.HaveEnaughtPots)
+            {
+                InventoryManager.DisplayInfo(Consts.Translations.notEnaughtPots);
+                return;
+            }
             IPot pot = pots.FirstOrDefault();
             if(pot == null)
             {
                 return;
             }
             newPotObject = Instantiate(pot.GetGameObject(), new Vector3(0,0,0), Quaternion.identity);
+            defaultColor = pot.GetGameObject().transform.GetChild(0).GetComponent<Renderer>().material.color;
             newPotObject.GetComponent<BoxCollider>().isTrigger = true;
             newPotObject.AddComponent<Rigidbody>().isKinematic = true;
             newPotObject.AddComponent<OnEnter>();
+        }
+        public static void TrySetNewPot()
+        {
+            var onEnter = newPotObject.GetComponent<OnEnter>();
+            if (!onEnter.CheckCanPlace())
+            {
+                InventoryManager.DisplayInfo(Consts.Translations.potColliding);
+                return;
+            }
+            var newPotObj = Instantiate(newPotObject, newPotObject.transform.position, Quaternion.identity);
+            newPotObj.GetComponent<BoxCollider>().isTrigger = false;
+            var potChilld = newPotObj.transform.GetChild(0);
+            Destroy(newPotObj.GetComponent<OnEnter>());
+            Renderer renderer = potChilld.GetComponent<Renderer>();
+            renderer.material.color = defaultColor;
+            Pot pot = new Pot(newPotObj);
+            pots.Add(pot);
+            Destroy(newPotObject);
+            InventoryManager.ChosedOption = InventoryType.malinowy;
         }
         public static void ChangeNewPotPlace(Vector3 camPosition, Vector3 camForward)
         {

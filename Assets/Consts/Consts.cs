@@ -38,6 +38,8 @@ namespace Assets
             public const string noEnaugthTomatoes = "Nie posiadasz wystarczająco dużo pomidorów";
             public const string noEnaugthSeeds = "Nie posiadasz wystarczająco dużo nasion";
             public const string questIsNotAble = "Quest nie jest już dostępny";
+            public const string potColliding = "Doniczka koliduje z innym objektem!";
+            public const string notEnaughtPots = "Musisz zdobyć doniczki";
         }
         public class DealerAnswers
         {

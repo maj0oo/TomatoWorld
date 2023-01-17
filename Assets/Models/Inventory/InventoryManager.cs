@@ -28,6 +28,7 @@ namespace Assets.Models.Inventory
         //POTS
         private static int potsCollected = 0;
         private static Text potCountText;
+        public static bool HaveEnaughtPots => potsCollected > 0;
 
         //BALANCE
         private static int balance = 10;

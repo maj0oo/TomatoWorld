@@ -51,6 +51,10 @@ public class PlayerMovement : MonoBehaviour
         {
             inventoryManager.SwitchTomatoType(scrollType.down);
         }
+        if(Input.GetKeyDown(KeyCode.E) && PotsManager.isSettingNewPot)
+        {
+            PotsManager.TrySetNewPot();
+        }
     }
     private void Move()
     {
