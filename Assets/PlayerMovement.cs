@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class PlayerMovement : MonoBehaviour
 {
     public CharacterController controller;
+    public GameObject doors;
     public Camera cam;
     public Text text;
     public Text info;
@@ -28,14 +29,13 @@ public class PlayerMovement : MonoBehaviour
         inventoryManager = new InventoryManager();
         info.gameObject.SetActive(false);
         InventoryManager.info = info;
-        lookManager = new LookManager(text, cam);
+        lookManager = new LookManager(text, cam, doors);
     }
 
     // Update is called once per frame
     void Update()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-
         if (!busy)
         {
             Move();

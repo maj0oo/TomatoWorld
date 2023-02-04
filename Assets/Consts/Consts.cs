@@ -14,12 +14,15 @@ namespace Assets
             public const string Dealer = "Dealer";
             public const string AnswersPanel = "AnswersPanel";
             public const string Boss = "Boss";
+            public const string Doors = "Doors";
         }
         public class Translations
         {
             public const string plantTomato = "[E] Zasadź pomidora";
             public const string getTomato = "[E] Zbierz pomidora";
             public const string talk = "[E] Pogadaj";
+            public const string openDoors = "[E] Otwórz";
+            public const string closeDoors = "[E] Zamknij";
             public const string malinowy = "Malinowy";
             public const string koktajlowy = "Koktajlowy";
             public const string daktylowy = "Daktylowy";

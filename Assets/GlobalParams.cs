@@ -11,7 +11,7 @@ namespace Assets
         public static int questCount = 3;
         public static TimeSpan dayLength = TimeSpan.FromSeconds(20);
         public static DayState dayState;
-        public static int PotPrice = 100;
+        public static int PotPrice = 200;
         public enum DayState
         {
             night = 0,

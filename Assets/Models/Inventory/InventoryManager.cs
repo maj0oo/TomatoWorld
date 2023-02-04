@@ -26,7 +26,7 @@ namespace Assets.Models.Inventory
         private static List<Seed> seeds = new List<Seed>();
 
         //POTS
-        private static int potsCollected = 0;
+        private static int potsCollected = 2;
         private static Text potCountText;
         public static bool HaveEnaughtPots => potsCollected > 0;
 
