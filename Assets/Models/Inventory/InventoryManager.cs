@@ -57,6 +57,10 @@ namespace Assets.Models.Inventory
                 potsCollected--;
             }
         }
+        public static int PotsCount()
+        {
+            return potsCollected;
+        }
         public static void SetBalanceText(Text text)
         {
             balanceText = text;
@@ -82,8 +86,9 @@ namespace Assets.Models.Inventory
             balance += toAdd;
             balanceText.text = balance.ToString();
         }
-        public static void GenerateSeed(TomatoType type, int count)
+        public static void GenerateSeedOnStart(TomatoType type, int count)
         {
+            seeds = new List<Seed>();
             for(int i = 0; i < count; i++)
             {
                 Seed seed = new Seed(type);

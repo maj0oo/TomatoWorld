@@ -38,7 +38,7 @@ namespace Assets
         public Text balanceText;
         void Start()
         {
-            InventoryManager.GenerateSeed(TomatoType.malinowy, 10);
+            InventoryManager.GenerateSeedOnStart(TomatoType.malinowy, 10);
             InventoryManager.SetBalanceText(balanceText);
             InventoryManager.SetPotText(potCount);
             SetInventoryText(InventoryType.malinowy, tomatoMalinowyText);

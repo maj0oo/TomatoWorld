@@ -3,6 +3,7 @@ using Assets.Models;
 using Assets.Models.Inventory;
 using Assets.Models.Pots;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
@@ -54,6 +55,11 @@ public class PlayerMovement : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.E) && PotsManager.isSettingNewPot)
         {
             PotsManager.TrySetNewPot();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            StateService.SaveState(controller);
+            SceneManager.LoadScene("Menu");
         }
     }
     private void Move()
